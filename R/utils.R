@@ -11,14 +11,14 @@ create_acronym_table <- function(){
     x
   }
 
-  ac_dir <- fs::path("inst", "resources", "acronyms")
+  ac_dir <- fs::path("inst", "formatted_acronym_lists")
 
   # import all acronyms, meanings, and definitions
   # (later, the definitions may go in a glossary)
   all_entries <- ac_dir |>
     fs::dir_ls(regexp = "\\.csv$") |>
     purrr::map_dfr(read.csv, .id = "source") |>
-    dplyr::mutate(source = gsub(".*acronyms/","",source),
+    dplyr::mutate(source = gsub(".*acronym_lists/","",source),
                   source = gsub("_.*","",source))
 
 
@@ -48,7 +48,7 @@ create_acronym_table <- function(){
                   )
 
 
-  # min length of consolidated acronyms: ~815
+  # min length of consolidated acronyms: ~818
   # length(unique(acronyms$Acronym))
 
   # for a given acronym: if there is a row with an identical acronym,
@@ -230,12 +230,13 @@ create_acronym_table <- function(){
 
   # export to csv
   # all acronyms
+  # dir.create(fs::path("inst/partially_cleaned_glossary/"))
   # write.csv(unique_all,
-  #           file = fs::path("inst/resources/acronyms/intermediary_files/acronyms_partial_cleaned.csv"))
+  #           file = fs::path("inst/partially_cleaned_glossary/acronyms_partial_cleaned.csv"))
   # # acronyms with identical acronyms and/or meanings
   # write.csv(redundants |>
   #             dplyr::select(-meaning_lower),
-  #           file = fs::path("inst/resources/acronyms/intermediary_files/acronyms_duplicates.csv"))
+  #           file = fs::path("inst/partially_cleaned_glossary/acronyms_duplicates.csv"))
 
   # remove duplicated acronyms as per discussions with Sam, Steve
   unique_all_cleaned <- unique_all |>
@@ -492,8 +493,8 @@ create_acronym_table <- function(){
   # all acronyms
   # write.csv(unique_all_cleaned |>
   # dplyr::select(Acronym, Meaning, Definition),
-  #           file = paste0(ac_dir, "/", "final_files", "/", "cleaned_acronyms.csv"))
-  #
+  #           file = fs::path("inst/final_glossary/cleaned_acronyms.csv"))
+
   # acronyms that need definitions written
   # need_defs <- unique_all_cleaned |>
   #   dplyr::filter(is.na(duplicated_ac),
@@ -502,28 +503,28 @@ create_acronym_table <- function(){
   #   dplyr::select(Acronym, Meaning, Definition)
   #
   # write.csv(need_defs,
-  #           "acronyms_need_definitions.csv")
+  #           file = fs::path("inst/partially_cleaned_glossary/acronyms_need_definitions.csv"))
 
   # Convert df into .tex file format and remove definitions
-  # sink(paste0(ac_dir, "/", "final_files", "/", "report_glossary.tex"))
-  # tex_acs <- unique_all_cleaned |>
-  #   dplyr::select(-Definition) |>
-  #   purrr::map_df(~ gsub("%", "\\%", .x, fixed = TRUE)) |>
-  #   dplyr::filter(!is.na(Meaning))
-  # for(i in 1:dim(tex_acs)[1]) {
-  #   cat(
-  #     paste0(
-  #       "\\newacronym{",
-  #       tolower(tex_acs[[1]][[i]]),
-  #       "}{",
-  #       tex_acs[[1]][[i]],
-  #       "}{",
-  #       tex_acs[[2]][[i]],
-  #       "}"
-  #     )
-  #   )
-  #   cat("\n")
-  #   }
-  # sink()
+  sink(fs::path("inst/final_glossary/report_glossary.tex"))
+  tex_acs <- unique_all_cleaned |>
+    dplyr::select(-Definition) |>
+    purrr::map_df(~ gsub("%", "\\%", .x, fixed = TRUE)) |>
+    dplyr::filter(!is.na(Meaning))
+  for(i in 1:dim(tex_acs)[1]) {
+    cat(
+      paste0(
+        "\\newacronym{",
+        tolower(tex_acs[[1]][[i]]),
+        "}{",
+        tex_acs[[1]][[i]],
+        "}{",
+        tex_acs[[2]][[i]],
+        "}"
+      )
+    )
+    cat("\n")
+    }
+  sink()
 
 }
