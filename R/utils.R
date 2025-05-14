@@ -2,7 +2,8 @@
 ####    Utilities    ####
 #########################
 
-#---- consolidate and organize acronyms ----
+#' Consolidate and organize acronyms
+#' @export
 create_acronym_table <- function(){
 
   # set up fxn that capitalizes first letter of string
