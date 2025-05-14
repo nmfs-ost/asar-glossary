@@ -11,7 +11,9 @@ on:
 # this action runs create_acronym_table() to create the glossary
 name: run_glossary.yml
 
-permissions: read-all
+permissions: 
+  contents: write
+  pull-requests: write
 
 jobs:
   run_glossary:
@@ -24,11 +26,24 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::remotes
 
+      - name: Install R package (asar.glossary)
+        run: devtools::install_local(upgrade = "always")
+        shell: Rscript {0} # use the default terminal for shell
+        
       - name: Make glossary
         run: | # | means there will be multiple lines of code here
-          devtools::install_local()
-          source('R/utils.R')
+         # source('R/utils.R')
           create_acronym_table()
         shell: Rscript {0}
-        # next: open a PR with new file
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'run create_acronym_table() in utils.R'
+          token: ${{ env.GITHUB_PAT }}
+          branch: regenerate_acronym_table
+          title: 'Regenerate acronym table'
+          body: Automated changes by run_glossary.yml GitHub action
