@@ -30,7 +30,7 @@ jobs:
           extra-packages: any::remotes
 
       - name: Install R package (asar.glossary)
-        run: devtools::install_local(upgrade = "always")
+        run: remotes::install_local(upgrade = "always")
         shell: Rscript {0} # use the default terminal for shell
         
       - name: Make glossary
