@@ -43,7 +43,6 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: 'run create_acronym_table() in utils.R'
-          token: ${{ env.GITHUB_PAT }}
           branch: regenerate_acronym_table
           title: 'Regenerate acronym table'
           body: Automated changes by run_glossary.yml GitHub action
