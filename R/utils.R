@@ -450,40 +450,8 @@ create_acronym_table <- function(){
     dplyr::mutate(Acronym = stringr::str_replace_all(Acronym, "SSB", "SB"))
 
   unique_all_cleaned <- unique_all_cleaned |>
-    dplyr::full_join(ssb_rows) |>
-    # add periods between acronym letters for acronyms that could be recognized as words
-    dplyr::mutate(
-      Acronym = ifelse(Acronym == "ACE", "A.C.E.", Acronym),
-      Acronym = ifelse(Acronym == "ACT", "A.C.T.", Acronym),
-      Acronym = ifelse(Acronym == "AM", "A.M.", Acronym),
-      Acronym = ifelse(Acronym == "ARM", "A.R.M.", Acronym),
-      Acronym = ifelse(Acronym == "AS", "A.S.", Acronym),
-      Acronym = ifelse(Acronym == "BEG", "B.E.G.", Acronym),
-      Acronym = ifelse(Acronym == "BET", "B.E.T.", Acronym),
-      Acronym = ifelse(Acronym == "CITES", "C.I.T.E.S.", Acronym),
-      Acronym = ifelse(Acronym == "COP", "C.O.P.", Acronym),
-      Acronym = ifelse(Acronym == "FATE", "F.A.T.E.", Acronym),
-      Acronym = ifelse(Acronym == "GOES", "G.O.E.S.", Acronym),
-      Acronym = ifelse(Acronym == "HOT", "H.O.T.", Acronym),
-      Acronym = ifelse(Acronym == "ID", "I.D.", Acronym),
-      Acronym = ifelse(Acronym == "JAM", "J.A.M.", Acronym),
-      Acronym = ifelse(Acronym == "LAMP", "L.A.M.P.", Acronym),
-      Acronym = ifelse(Acronym == "LEAP", "L.E.A.P.", Acronym),
-      Acronym = ifelse(Acronym == "ME", "M.E.", Acronym),
-      Acronym = ifelse(Acronym == "MEW", "M.E.W.", Acronym),
-      Acronym = ifelse(Acronym == "NOVA", "N.O.V.A.", Acronym),
-      Acronym = ifelse(Acronym == "OLE", "O.L.E.", Acronym),
-      Acronym = ifelse(Acronym == "OR", "O.R.", Acronym),
-      Acronym = ifelse(Acronym == "POP", "P.O.P.", Acronym),
-      Acronym = ifelse(Acronym == "SAFE", "S.A.F.E.", Acronym),
-      Acronym = ifelse(Acronym == "SAP", "S.A.P.", Acronym),
-      Acronym = ifelse(Acronym == "SAW", "S.A.W.", Acronym),
-      Acronym = ifelse(Acronym == "SET", "S.E.T.", Acronym),
-      Acronym = ifelse(Acronym == "SPLASH", "S.P.L.A.S.H.", Acronym),
-      Acronym = ifelse(Acronym == "STAR", "S.T.A.R.", Acronym),
-      Acronym = ifelse(Acronym == "US", "U.S.", Acronym),
-      Acronym = ifelse(Acronym == "WHAM", "W.H.A.M.", Acronym)
-    )
+    dplyr::full_join(ssb_rows)
+    
 
   # keep cleaning by:
   # -adding new definitions
